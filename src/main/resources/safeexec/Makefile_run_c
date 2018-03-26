@@ -1,0 +1,2 @@
+run: a.out
+	safeexec --clock 5 --cpu 3 --mem 524288 --usage exe-stats --error exe-stderr --exec a.out < exe-stdin > exe-stdout

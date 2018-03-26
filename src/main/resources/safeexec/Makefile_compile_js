@@ -1,0 +1,2 @@
+run: main.js
+	safeexec --usage cmp-stats --error cmp-stderr --exec /bin/echo "OK" > cmp-stdout

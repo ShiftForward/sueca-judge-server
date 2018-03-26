@@ -1,0 +1,2 @@
+run: main.cpp
+	safeexec --nproc 16 --mem 524288 --cpu 5 --usage cmp-stats --error cmp-stderr --exec /usr/bin/g++ -std=c++11 -Wall -O2 -lm main.cpp > cmp-stdout

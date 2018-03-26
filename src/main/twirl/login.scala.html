@@ -1,0 +1,44 @@
+@import eu.shiftforward.suecajudge.http.HttpService.Session
+
+@(error: Option[String] = None)(implicit session: Session)
+
+@layout("Iniciar sessão") {
+  <section class="section--center mdl-grid center-horizontal mdl-typography--text-center">
+    <div class="mdl-card mdl-cell mdl-cell--6-col-desktop mdl-cell--6-col-tablet mdl-cell--6-col-phone mdl-shadow--2dp">
+      <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
+        <h2 class="mdl-card__title-text">Iniciar sessão</h2>
+      </div>
+      <form method="post" action="/login">
+        <div class="mdl-card__supporting-text" style="min-height: 230px;">
+            <div class="mdl-textfield mdl-js-textfield invisible-error @{if (error.isDefined) "is-invalid" else ""}">
+              <span class="mdl-textfield__error">@error</span>
+            </div>
+            <div class="mdl-textfield mdl-textfield--floating-label mdl-js-textfield">
+              <input class="mdl-textfield__input" type="text" id="username" name="username" />
+              <label class="mdl-textfield__label" for="username">Utilizador</label>
+            </div>
+            <div class="mdl-textfield mdl-textfield--floating-label mdl-js-textfield">
+              <input class="mdl-textfield__input" type="password" id="password" name="password" />
+              <label class="mdl-textfield__label" for="password">Password</label>
+            </div>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Entrar</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="mdl-card mdl-cell mdl-cell--6-col-desktop mdl-cell--6-col-tablet mdl-cell--6-col-phone mdl-shadow--2dp" style="min-height: 0;">
+      <div class="mdl-card--expand mdl-card__supporting-text" style="width: 94%;">
+        Não registado?
+      </div>
+
+      <div class="mdl-card__actions mdl-card--border">
+        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/register">
+          Regista-te
+          <span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span>
+        </a>
+      </div>
+    </div>
+  </section>
+}

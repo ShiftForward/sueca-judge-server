@@ -1,0 +1,86 @@
+@import eu.shiftforward.suecajudge.http.HttpService.Session
+@import eu.shiftforward.suecajudge.storage.Player
+
+@(initialData: Option[Player] = None, errors: Map[String, List[String]] = Map.empty)(implicit session: Session)
+
+@isInvalid(field: String) = @{
+  if (errors.getOrElse(field, List.empty).nonEmpty) "is-invalid" else ""
+}
+
+@errorsFor(field: String) = @{
+  <span class="mdl-textfield__error">{errors.getOrElse(field, List.empty).mkString("; ")}</span>
+}
+
+@layout("Registo") {
+  <section class="section--center">
+    <div class="mdl-grid" style="justify-content: center;">
+      <div class="mdl-card mdl-cell mdl-cell--6-col mdl-cell--6 mdl-cell--6-col-phone mdl-shadow--2dp">
+        <div class="mdl-card__media">
+          <img src="/img/ticket.jpg" style="width: 100%"/>
+        </div>
+        <div class="mdl-card__title">
+          Código de inscrição
+        </div>
+        <div class="mdl-card__supporting-text mdl-card--expand">
+          <p>
+          Cada participante do ENEI recebeu no seu saco de boas vindas um cartão do ShiftForward Challenge. Usa o código único encontrado no teu cartão para te registares na plataforma.
+          </p>
+          <p>
+            <strong>O ShiftForward Challenge Card deverá ser guardado até ao final do desafio, para posterior confirmação do vencedor.</strong>
+          </p>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <div class="mdl-card__supporting-text mdl-typography--text-center" style="padding: 0px 15px;">
+            Já registado? <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/login">
+              Inicia sessão
+              <span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mdl-card mdl-cell mdl-cell--top mdl-cell--6-col-desktop mdl-cell--6-col-tablet mdl-cell--6-col-phone mdl-shadow--2dp mdl-typography--text-center">
+        <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
+          <h2 class="mdl-card__title-text">Registo</h2>
+        </div>
+        <form method="post" action="/register">
+          <div class="mdl-card__supporting-text mdl-card--expand">
+            <div class="mdl-textfield mdl-textfield--floating-label mdl-js-textfield @isInvalid("entryCode")">
+              <input class="mdl-textfield__input" type="text" id="entryCode" name="entryCode" value="@initialData.map(_.entryCode)"/>
+              <label class="mdl-textfield__label" for="entryCode">Código de inscrição</label>
+              @errorsFor("entryCode")
+            </div>
+            <div class="mdl-textfield mdl-textfield--floating-label mdl-js-textfield @isInvalid("username")">
+              <input class="mdl-textfield__input" type="text" id="username" name="username" value="@initialData.map(_.username)"/>
+              <label class="mdl-textfield__label" for="username">Utilizador</label>
+              @errorsFor("username")
+            </div>
+            <div class="mdl-textfield mdl-textfield--floating-label mdl-js-textfield @isInvalid("name")">
+              <input class="mdl-textfield__input" type="text" id="name" name="name" value="@initialData.map(_.name)"/>
+              <label class="mdl-textfield__label" for="name">Primeiro e último nome</label>
+              @errorsFor("name")
+            </div>
+            <div class="mdl-textfield mdl-textfield--floating-label mdl-js-textfield @isInvalid("institution")">
+              <input class="mdl-textfield__input" type="text" id="institution" name="institution" value="@initialData.map(_.institution)"/>
+              <label class="mdl-textfield__label" for="institution">Instituição</label>
+              @errorsFor("institution")
+            </div>
+            <div class="mdl-textfield mdl-textfield--floating-label mdl-js-textfield @isInvalid("email")">
+              <input class="mdl-textfield__input" type="text" id="email" name="email" value="@initialData.map(_.email)" />
+              <label class="mdl-textfield__label" for="email">E-mail</label>
+              @errorsFor("email")
+            </div>
+            <div class="mdl-textfield mdl-textfield--floating-label mdl-js-textfield @isInvalid("password")">
+              <input class="mdl-textfield__input" type="password" id="password" name="password" value="@initialData.map(_.password)" />
+              <label class="mdl-textfield__label" for="password">Password</label>
+              @errorsFor("password")
+            </div>
+          </div>
+          <div class="mdl-card__actions mdl-card--border">
+            <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Registar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+}

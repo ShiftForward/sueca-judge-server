@@ -1,0 +1,8 @@
+1
+10 3H QS 3S JC AH 5S 6H 2C 2D KS
+2
+3C
+3 2H X X 4H
+H
+0
+0 0

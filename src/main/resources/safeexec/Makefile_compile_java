@@ -1,0 +1,5 @@
+Main.jar: Main.class
+	safeexec --cpu 5 --nproc 32 --mem 6291456 --usage cmp-stats --error jar-stderr --exec /usr/lib/jvm/java-1.8-openjdk/bin/jar -J-Xmx512M -J-Xss64M cfv Main.jar *.class > jar-stdout
+
+Main.class: Main.java
+	safeexec --cpu 5 --nproc 32 --mem 6291456 --usage cmp-stats --error cmp-stderr --exec /usr/lib/jvm/java-1.8-openjdk/bin/javac -J-Xmx512M -J-Xss64M Main.java > cmp-stdout

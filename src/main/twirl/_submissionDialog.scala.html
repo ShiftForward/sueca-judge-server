@@ -1,0 +1,28 @@
+@(string: String)
+
+<dialog class="mdl-dialog submit-error">
+  <h4 class="mdl-dialog__title">Erros de compilação</h4>
+  <div class="mdl-dialog__content">
+    <pre>@string</pre>
+  </div>
+  <div class="mdl-dialog__actions">
+    <button type="button" class="mdl-button close">Fechar</button>
+  </div>
+</dialog>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.9/dialog-polyfill.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.9/dialog-polyfill.min.css" />
+<script>
+  var dialog = document.querySelector('dialog');
+  var showDialogButton = document.querySelector('#show-dialog');
+  if (dialog) {
+    if (!dialog.showModal) {
+      dialogPolyfill.registerDialog(dialog);
+    }
+    showDialogButton && showDialogButton.addEventListener('click', function () {
+      dialog.showModal();
+    });
+    dialog.querySelector('.close').addEventListener('click', function () {
+      dialog.close();
+    });
+  }
+</script>

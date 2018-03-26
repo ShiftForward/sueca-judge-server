@@ -1,0 +1,19 @@
+@()
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/locale/pt.js"></script>
+<script>
+  Array.from(document.getElementsByClassName("momentjs-from-now")).forEach(function (elem) {
+    var momentObj = moment(parseInt(elem.innerHTML));
+    elem.innerHTML = momentObj.fromNow();
+    elem.title = momentObj.format();
+    elem.classList.remove("hidden");
+  });
+
+  Array.from(document.getElementsByClassName("momentjs-date")).forEach(function (elem) {
+    var momentObj = moment(parseInt(elem.innerHTML));
+    elem.innerHTML = momentObj.format("YYYY-MM-DD HH:mm");
+    elem.title = momentObj.format();
+    elem.classList.remove("hidden");
+  });
+</script>

@@ -1,0 +1,196 @@
+@import eu.shiftforward.suecajudge.http.HttpService.Session
+@import eu.shiftforward.suecajudge.storage.Submission
+@import eu.shiftforward.suecajudge.storage.Submission._
+@import eu.shiftforward.suecajudge.safeexec.Runner._
+
+@(submission: Option[Submission] = None, errors: Map[String, List[String]] = Map.empty, submissionLimitPast: Boolean = false)(implicit session: Session)
+
+@isInvalid(field: String) = @{
+  if (errors.getOrElse(field, List.empty).nonEmpty) "is-invalid" else ""
+}
+
+@errorsFor(field: String) = @{
+    <span class="mdl-textfield__error">{errors.getOrElse(field, List.empty).mkString("; ")}</span>
+}
+
+@bodyContent = @{submission.map { s => s.state match {
+  case Error(CompilationError(stdout, stderr, error)) => _submissionDialog(stdout + "\n" + stderr)
+  case _ => Html("")
+}}}
+
+@layout("Submeter", bodyContent) {
+  <section class="section--center mdl-grid submit">
+    <div class="mdl-card mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--8-col-phone mdl-shadow--2dp">
+      <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Detalhes da última submissão</h2>
+      </div>
+      <div class="mdl-card__supporting-text mdl-card--expand">
+        @{
+          submission match {
+            case Some(s) => _submission(s)
+            case None => <span>Ainda não submeteste nenhum bot.</span>
+          }
+        }
+      </div>
+      <div class="mdl-card__actions mdl-card--border mdl-typography--text-center">
+        <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="window.location.reload();">Atualizar</button>
+      </div>
+    </div>
+
+    <div class="mdl-card mdl-cell mdl-cell--top mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--8-col-phone mdl-shadow--2dp mdl-typography--text-center">
+      <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Submeter um bot</h2>
+      </div>
+      @if(submissionLimitPast) {
+        <div class="mdl-card__supporting-text">
+          <p>O tempo limite para submissão acabou.</p>
+          <p>Os vencedores serão anunciados na sessão de encerramento.</p>
+        </div>
+      } else {
+        <form method="post" action="/submit" enctype="multipart/form-data">
+          <div class="mdl-card__supporting-text">
+            <div class="mdl-textfield mdl-js-textfield invisible-error @isInvalid("time")">
+              @errorsFor("time")
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label @isInvalid("language")">
+              <select class="mdl-textfield__input" id="language" name="language">
+                <option></option>
+                <option @{if (submission.map(_.language.name == "C").getOrElse(false)) "selected=selected"} value="C">C</option>
+                <option @{if (submission.map(_.language.name == "C++").getOrElse(false)) "selected=selected"} value="C++">C++</option>
+                <option @{if (submission.map(_.language.name == "Java").getOrElse(false)) "selected=selected"} value="Java">Java</option>
+                <option @{if (submission.map(_.language.name == "Python").getOrElse(false)) "selected=selected"} value="Python">Python</option>
+                <option @{if (submission.map(_.language.name == "JavaScript").getOrElse(false)) "selected=selected"} value="JavaScript">Javascript</option>
+              </select>
+              <label class="mdl-textfield__label" for="language">Linguagem</label>
+              @errorsFor("language")
+            </div>
+            <div id="uploadFileContainer" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--file @isInvalid("payload")">
+              <input class="mdl-textfield__input" type="text" id="uploadFile" readonly/>
+              <div class="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
+                <i class="material-icons">attach_file</i><input type="file" name="payload" id="uploadBtn" >
+              </div>
+              <label class="mdl-textfield__label" for="language">Código</label>
+              @errorsFor("payload")
+            </div>
+          </div>
+          <div class="mdl-card__actions mdl-card--border">
+            <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Submeter</button>
+          </div>
+        </form>
+      }
+    </div>
+
+    <div class="mdl-card mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--8-col-phone mdl-shadow--2dp">
+      <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Templates de bots</h2>
+      </div>
+      <div class="mdl-card__supporting-text mdl-card--expand">
+        <div>
+          Tens acesso a um template para cada linguagem suportada com a lógica de interpretação do formato de entrada para um objeto de domínio implementada. Só tens de implementar a tua lógica de decisão dentro da função providenciada.</div>
+        <div>
+          Não te esqueças de ler as regras relacionadas com <em>construir um bot</em> <a href="/rules#construir-um-bot">aqui</a>.
+        </div>
+      </div>
+      <div class="mdl-card__supporting-text">
+        <ul class="mdl-list code-example" style="margin: 0;">
+          <li class="mdl-list__item mdl-list__item--two-line">
+            <span class="mdl-list__item-primary-content">
+              <span>C</span>
+              <span class="mdl-list__item-sub-title">
+                <a href="/templates/main.c" download="main.c">download</a>
+              </span>
+            </span>
+          </li>
+          <li class="mdl-list__item mdl-list__item--two-line">
+            <span class="mdl-list__item-primary-content">
+              <span>C++</span>
+              <span class="mdl-list__item-sub-title">
+                <a href="/templates/main.cpp" download="main.cpp">download</a>
+              </span>
+            </span>
+          </li>
+          <li class="mdl-list__item mdl-list__item--two-line">
+            <span class="mdl-list__item-primary-content">
+              <span>Java</span>
+              <span class="mdl-list__item-sub-title">
+                <a href="/templates/Main.java" download="Main.java">download</a>
+              </span>
+            </span>
+          </li>
+          <li class="mdl-list__item mdl-list__item--two-line">
+            <span class="mdl-list__item-primary-content">
+              <span>Python</span>
+              <span class="mdl-list__item-sub-title">
+                <a href="/templates/main.py" download="main.py">download</a>
+              </span>
+            </span>
+          </li>
+          <li class="mdl-list__item mdl-list__item--two-line">
+            <span class="mdl-list__item-primary-content">
+              <span>JavaScript</span>
+              <span class="mdl-list__item-sub-title">
+                <a href="/templates/main.js" download="main.js">download</a>
+              </span>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <style>
+      ::placeholder {
+        color: #bdbdbd;
+      }
+  </style>
+  <script>
+    var uploadFile = document.getElementById("uploadFile");
+    var uploadFileContainer = document.getElementById("uploadFileContainer");
+    var uploadBtn = document.getElementById("uploadBtn");
+
+    if (uploadFile) {
+      uploadFile.onclick = function () {
+        uploadBtn.click();
+      };
+      uploadBtn.onchange = function () {
+        var fileStr = this.files[0];
+
+        if (fileStr) {
+          uploadFile.value = fileStr.name;
+          uploadFileContainer.classList.add("is-dirty");
+        } else {
+          uploadFile.value = "";
+          uploadFileContainer.classList.remove("is-dirty");
+        }
+      };
+
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (eventName) {
+        uploadFile.addEventListener(eventName, preventDefaults, false)
+      });
+
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      uploadFile.addEventListener('dragenter', function () {
+        uploadFileContainer.classList.add("is-focused");
+      }, false);
+
+      ['dragleave', 'drop'].forEach(function (eventName) {
+        uploadFile.addEventListener(eventName, function () {
+          uploadFileContainer.classList.remove("is-focused");
+        }, false);
+      });
+
+      uploadFile.onchange = function () {
+        console.log(arguments);
+      };
+
+      uploadFile.addEventListener('drop', function (event) {
+        var dt = event.dataTransfer || {};
+        uploadBtn.files = dt.files || [];
+        uploadBtn.onchange();
+      }, false);
+    }
+  </script>
+}

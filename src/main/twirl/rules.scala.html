@@ -1,0 +1,520 @@
+@import eu.shiftforward.suecajudge.http.HttpService.Session
+
+@()(implicit session: Session)
+
+@layout("Regras") {
+  <section class="section--center mdl-grid rules">
+    <div id="generalidades" class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp">
+      <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Generalidades</h2>
+      </div>
+      <div class="mdl-card__supporting-text">
+        <p>
+          A sueca é um jogo de cartas para quatro jogadores, jogado em pares (dois contra dois), com os parceiros
+          sentados de forma oposta (para mais informações acerca da sueca, salta para <a
+          href="#regras-da-sueca">aqui</a>).
+        </p>
+        <p>
+          Nesta competição, defrontam-se em cada jogo dois bots, sendo que os dois jogadores da mesma equipa são
+          controlados pelo mesmo bot.
+        </p>
+      </div>
+    </div>
+
+    <div id="construir-um-bot" class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp">
+      <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Construir um bot</h2>
+      </div>
+      <div class="mdl-card__supporting-text">
+        <p>
+          Um bot para esta competição é um programa numa das linguagens aceites na tabela abaixo que lê do <em>standard
+          input</em> o estado actual do jogo e escreve para o <em>standard output</em> a carta que escolheu para jogar.
+          Duas instâncias independentes do mesmo bot controlam os dois jogadores que compõem a mesma equipa, não sendo
+          possível partilhar informação entre eles.
+        </p>
+        <p>
+          A submissão é feita num único ficheiro de código numa das linguagens aceites. O tamanho máximo do ficheiro
+          submetido é de 50kB. As linguagens aceites, juntamente com os compiladores utilizados e limites computacionais
+          associados estão detalhados na seguinte tabela:
+        </p>
+        <div style="margin-bottom: 15px">
+          <table class="mdl-data-table" style="margin: 0 auto;">
+            <thead>
+              <tr>
+                <th>Linguagem</th>
+                <th>Compilador/Interpretador</th>
+                <th><em>Flags</em> e bibliotecas</th>
+                <th>Limite de tempo<br/>(segundos)</th>
+                <th>Limite de memória<br/>(MB)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>C</td>
+                <td>gcc 6.4.0</td>
+                <td><code>-Wall -O2 -lm</code></td>
+                <td>2</td>
+                <td>512</td>
+              </tr>
+              <tr>
+                <td>C++</td>
+                <td>g++ 6.4.0</td>
+                <td><code>-std=c++11 -Wall -O2 -lm</code></td>
+                <td>2</td>
+                <td>512</td>
+              </tr>
+              <tr>
+                <td>Java</td>
+                <td>OpenJDK 1.8.0_151</td>
+                <td></td>
+                <td>2</td>
+                <td>512</td>
+              </tr>
+              <tr>
+                <td>Python</td>
+                <td>Python 3.6.3</td>
+                <td>(numpy 1.14.2 instalado)</td>
+                <td>3</td>
+                <td>512</td>
+              </tr>
+              <tr>
+                <td>JavaScript</td>
+                <td>node.js v8.9.3</td>
+                <td>(lodash 4.17.5 instalado)</td>
+                <td>3</td>
+                <td>512</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Submissões em Java devem ser feitas numa única classe <code>Main</code> (não pertencendo a nenhuma <em>
+          package</em>)
+          com método <code>main</code> estático.
+        </p>
+        <p>
+          É possível que um bot faça uma jogada inválida. Isso pode acontecer quando:
+        </p>
+        <ul>
+          <li>O tempo de execução do bot excede o tempo máximo permitido;</li>
+          <li>O bot aloca mais memória do que a permitida;</li>
+          <li>O programa do bot termina com um <em>status code</em> diferente de 0;</li>
+          <li>O bot responde com algo que não constitui a representação de uma carta;</li>
+          <li>O bot responde com uma carta inválida.</li>
+        </ul>
+        <p>
+          Cada submissão é compilada e corrida contra um conjunto básico de testes antes de ficar elegível para o
+          torneio, pelo que recomendamos que estejas atento à <em>tab</em> de <a href="/submit">Submissões</a>. Sempre
+          que, durante um torneio, uma jogada inválida é identificada, o estado que espoletou essa jogada inválida é
+          adicionado ao conjunto básico de testes. Nesse sentido, é possível que uma submissão que já tenha sido aceite
+          e tenha participado num torneio deixe de estar válida no futuro.
+        </p>
+        <p>
+          Quando um bot faz uma jogada inválida, esse bot perde automaticamente o jogo, assim como jogos futuros no
+          mesmo torneio.
+        </p>
+        <h5 id="formatos-do-input-e-output">Formatos do input e output</h5>
+        <p>
+          O bot deve ler o estado do jogo através do <em>standard input</em> e responder com a carta a jogar para o
+          <em>standard output</em>. Todas as cartas são representadas por dois caracteres: o símbolo da carta e o naipe
+          a que a carta pertence. A representação de cada símbolo é dada pela seguinte tabela:
+        </p>
+        <div style="margin-bottom: 15px;">
+          <table class="mdl-data-table" style="margin: 0 auto;">
+            <thead>
+              <tr>
+                <th>Carta</th>
+                <th>Caráter que a representa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Às</td>
+                <td><code>A</code></td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td><code>7</code></td>
+              </tr>
+              <tr>
+                <td>Rei</td>
+                <td><code>K</code></td>
+              </tr>
+              <tr>
+                <td>Valete</td>
+                <td><code>J</code></td>
+              </tr>
+              <tr>
+                <td>Dama</td>
+                <td><code>Q</code></td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td><code>6</code></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><code>5</code></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><code>4</code></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><code>3</code></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><code>2</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          A representação de cada naipe é dada pela seguinte tabela:
+        </p>
+        <div style="margin-bottom: 15px;">
+          <table class="mdl-data-table" style="margin: 0 auto;">
+            <thead>
+              <tr>
+                <th>Naipe</th>
+                <th>Caráter que o representa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Copas</td>
+                <td><code>H</code></td>
+              </tr>
+              <tr>
+                <td>Ouros</td>
+                <td><code>D</code></td>
+              </tr>
+              <tr>
+                <td>Paus</td>
+                <td><code>C</code></td>
+              </tr>
+              <tr>
+                <td>Espadas</td>
+                <td><code>S</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Por exemplo, o Rei de Copas é representado por <code>KH</code>; o Ás de Espadas é representado por
+          <code>AS</code> o 6 de Ouros é representado por <code>6D</code>; o Valete de Paus é representado por
+          <code>JC</code>.
+        </p>
+        <p>
+          O formato do <em>input</em> é dado por:
+        </p>
+        <div>
+          <pre>NP
+NC C_1 C_2 ... C_NC
+TP
+TC
+CTP CTC_0 CTC_1 CTC_2 CTC_3
+TS
+NPT NPT_1 PT_1C_0 PT_1C_1 PT_1C_2 PT_1C_3 ... NPT_N PT_NC_0 PT_NC_1 PT_NC_2 PT_NC_3
+PT_0 PT_1</pre>
+        </div>
+        <p>
+          Em que as variáveis têm o seguinte significado:
+        </p>
+        <div style="margin-bottom: 15px;">
+          <table class="mdl-data-table" style="margin: 0 auto;">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Variável</th>
+                <th class="whitespace mdl-data-table__cell--non-numeric">Significado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>NP</code></td>
+                <td class="whitespace mdl-data-table__cell--non-numeric">Número do jogador atual (0-3).</td>
+              </tr>
+              <tr>
+                <td><code>NC</code></td>
+                <td class="whitespace mdl-data-table__cell--non-numeric">Número de cartas na mão (1-10).</td>
+              </tr>
+              <tr>
+                <td><code>C_N</code></td>
+                <td class="whitespace mdl-data-table__cell--non-numeric">
+                  Enésima carta da mão, de acordo com a representação acima apresentada.
+                </td>
+              </tr>
+              <tr>
+                <td><code>TP</code></td>
+                <td class="whitespace mdl-data-table__cell--non-numeric">
+                  Número do jogador que determinou o trunfo (0-3).
+                </td>
+              </tr>
+              <tr>
+                <td><code>TC</code></td>
+                <td class="whitespace mdl-data-table__cell--non-numeric">Carta que determinou o trunfo.</td>
+              </tr>
+              <tr>
+                <td><code>CTP</code></td>
+                <td class="whitespace mdl-data-table__cell--non-numeric">Jogador que começou a jogada.</td>
+              </tr>
+              <tr>
+                <td><code>CTC_N</code></td>
+                <td class="whitespace mdl-data-table__cell--non-numeric">
+                  Carta da jogada atual que foi jogada pelo jogador <code>N</code>. O valor de <code>CTC_N</code> pode
+                  ser uma representação de carta como foi acima apresentado, ou <code>X</code> caso o jogador ainda não
+                  tenha jogado.
+                </td>
+              </tr>
+              <tr>
+                <td><code>TS</code></td>
+                <td class="whitespace mdl-data-table__cell--non-numeric">
+                  Naipe da jogada atual, i.e. naipe da carta jogada pelo jogador que começou a jogada.
+                </td>
+              </tr>
+              <tr>
+                <td><code>NPT</code></td>
+                <td class="whitespace mdl-data-table__cell--non-numeric">
+                  Número de jogadas anteriores.
+                </td>
+              </tr>
+              <tr>
+                <td><code>NPT_X</code></td>
+                <td class="whitespace mdl-data-table__cell--non-numeric">
+                  Número do jogador que começou a jogada X.
+                </td>
+              </tr>
+              <tr>
+                <td><code>PT_XC_Y</code></td>
+                <td class="whitespace mdl-data-table__cell--non-numeric">
+                  Carta jogada pelo jogador <code>Y</code> na jogada anterior <code>X</code>.
+                </td>
+              </tr>
+              <tr>
+                <td><code>PT_X</code></td>
+                <td class="whitespace mdl-data-table__cell--non-numeric">
+                  Pontos actuais da equipa <code>X</code>. A equipa de um jogador <code>N</code> é sempre dada pelo
+                  resultado da operação <code>N % 2</code>.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          O bot deve apenas escrever para o <em>standard output</em> uma das cartas presentes em <code>C_1 C_2 ...
+          C_NC</code> cuja jogada seja válida.
+        </p>
+        <h6>Exemplo 1</h6>
+        <pre>2
+10 AD 2C 3C 4C 5C 6C 7C 7D KD QD
+1
+2D
+3 KC AC X QC
+C
+0
+0 0</pre>
+        <p>
+          Neste caso, o jogador a jogar é o número 2. Tem ainda 10 cartas na mão. O jogador que determinou o trunfo foi
+          o jogador 1, sendo a carta determinante o 2 de Ouros. A jogada atual foi iniciada pelo jogador 3, que jogou
+          uma Dama de Paus. O jogador 0 jogou um Rei de Paus e o jogador 1 o Ás de Paus. Nesse sentido, o naipe da
+          jogada é Paus (<code>C</code>).
+        </p>
+        <p>
+          Como ainda é a primeira jogada do jogo, existem 0 jogadas anteriores, e ambas as equipas ainda se encontram
+          com 0 pontos. Neste caso, o jogador actual pode jogar qualquer uma das cartas de Paus (<code>2C</code>,
+          <code>3C</code>, <code>4C</code>, <code>5C</code>, <code>6C</code> e <code>7C</code>) que tem na mão.
+        </p>
+        <h6>Exemplo 2</h6>
+        <pre>1
+9 2D 3H 4H 5H 6H 7H 7S KS QD
+1
+2D
+1 X X X X
+X
+1 3 KC AC 2C QC
+0 17</pre>
+        <p>
+          Neste caso, o jogador a jogar é o número 1. Tem 9 cartas na mão. O jogador que determinou o trunfo foi ele
+          próprio, sendo a carta determinante o 2 de Ouros. A jogada atual vai ser iniciada pelo próprio jogador,
+          estando o naipe ainda indefinido (<code>X</code>). Existe uma jogada anterior, que foi iniciada pelo jogador
+          3. A equipa 1, à qual o jogador 1 pertence, encontra-se a vencer por 17-0. Neste caso, o jogador actual pode
+          jogar qualquer uma das cartas da sua mão.
+        </p>
+      </div>
+    </div>
+
+    <div id="regras-do-torneio" class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp">
+      <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Regras do Torneio</h2>
+      </div>
+      <div class="mdl-card__supporting-text">
+        <p>
+          O torneio entre os bots usa o <a href="https://en.wikipedia.org/wiki/Swiss-system_tournament">sistema
+          suíço</a>. Para N bots inscritos, são feitas pelo menos <img
+          src="https://latex.codecogs.com/svg.latex?\lceil&space;log_2(N)&space;\rceil" title="\lceil log_2(N) \rceil"
+          /> rondas do sistema suíço. O emparelhamento da primeira ronda é decidido aleatoriamente. Nas rondas seguintes
+          são emparelhados bots com igual número de pontos, sendo empates resolvidos de forma aleatória.
+        </p>
+        <p>
+          No caso de existir número ímpar de bots com o mesmo número de pontos, um desses bots é emparelhado com o grupo
+          de pontuação imediatamente abaixo.
+        </p>
+        <p>
+          No caso de número ímpar de bots no torneio, há um bot por ronda que não joga, recebendo pontos iguais a ter
+          ganho a partida dessa ronda. O bot que não joga numa dada ronda é aquele com menor pontuação de entre os bots
+          que ainda não foram escolhidos para não jogar numa ronda desse torneio, sendo empates resolvidos de forma
+          aleatória. Depois de emparelhados, os bots jogam um jogo de sueca entre si. No caso de empate, ambos os bots
+          recebem 1 ponto. Caso contrário, o bot vencedor recebe 3 pontos, e o bot perdedor recebe 0 pontos. No final
+          das rondas do torneio, os bots são classificados segundo a sua pontuação, sendo empates quebrados segundo o
+          maior valor da média da classificação final dos seus adversários (<a
+          href="https://en.wikipedia.org/wiki/Tie-breaking_in_Swiss-system_tournaments#Average_rating_of_opposition">
+          ARO</a> - average rating of opponents).
+        </p>
+        <p>
+          Periodicamente, é executado um torneio com as submissões mais recentes de cada bot, cujo resultado é refletido
+          na <em>tab</em> <a href="/leaderboard">Pontuações</a>. Depois da competição fechar, é feito um torneio final
+          com as submissões mais recentes de todos os bots, sendo o resultado desse torneio usado para decidir os
+          vencedores.
+        </p>
+        <p>
+          O torneio final obedece a um sistema diferente do dos torneios preliminares. O número de pontos que cada bot
+          recebe por jogo é determinado da mesma forma dos torneios preliminares, mas, em vez do sistema suiço, é feito
+          um torneio <a href="https://en.wikipedia.org/wiki/Round-robin_tournament">round-robin</a>. No final das rondas
+          do torneio, os bots são classificados segundo a sua pontuação, sendo empates quebrados pelos seguintes
+          critérios, por ordem decrescente de importância:
+          <ol>
+            <li>Número de vitórias;</li>
+            <li>Número de vitórias em confronto directo;</li>
+            <li>Número de pontos nos jogos efectuados em confronto direto;</li>
+            <li>Escolha aleatória.</li>
+          </ol>
+        </p>
+      </div>
+    </div>
+
+    <div id="regras-de-participacao" class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp">
+      <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Regras de Participação</h2>
+      </div>
+      <div class="mdl-card__supporting-text">
+        <ul>
+          <li>É permitida apenas uma inscrição por pessoa.</li>
+          <li>O ShiftForward Challenge Card deverá ser guardado até ao final do desafio, para posterior confirmação do vencedor.</li>
+          <li>São aceites inúmeras melhorias e ressubmissões de código, mas apenas a submissão final será contabilizada.</li>
+          <li>Serão aceites submissões até às 00h de dia 26 de março de 2018, segunda-feira.</li>
+          <li>O anúncio dos vencedores será feito na cerimónia de encerramento do ENEI, entre as 14h e as 15h15 de dia 26 de março de 2018.</li>
+          <li>O código elaborado para este desafio é propriedade do participante, mas a ShiftForward reserva-se o direito de publicação do código submetido depois do concurso.</li>
+          <li>O não-cumprimento de qualquer uma destas regras implica a invalidação da participação.</li>
+          <li>Na eventualidade de se darem ocorrências que colidam com o bom e regular funcionamento da competição, a ShiftForward reserva-se o direito de cancelar, alterar ou suspender a competição ou os competidores em causa.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="regras-da-sueca" class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp">
+      <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Regras da Sueca</h2>
+      </div>
+      <div class="mdl-card__supporting-text">
+        <p>
+          A sueca é um jogo de cartas para quatro jogadores, jogado em pares (dois contra dois), com os parceiros
+          sentados de forma oposta. Nesta competição, defrontam-se em cada jogo dois bots, sendo que os dois jogadores
+          da mesma equipa são controlados pelo mesmo bot.
+        </p>
+        <p>
+          Numa partida de sueca, são usadas apenas 40 cartas do baralho francês, sendo removidos os oitos, noves e dez.
+        </p>
+        <p>
+          Existem quatro naipes: copas (ou <em>hearts</em>, representado por <code>H</code>), ouros (ou
+          <em>diamonds</em>, representado por <code>D</code>), paus (ou <em>clubs</em>, representado por <code>C</code>)
+          e espadas (ou <em>spades</em>, representado por <code>S</code>). A ordem decrescente, em valor, das cartas em
+          cada naipe é ás (representado por <code>A</code>), 7 (<code>7</code>), rei (<code>K</code>), valete
+          (<code>J</code>), dama (<code>Q</code>), 6 (<code>6</code>), 5 (<code>5</code>), 4 (<code>4</code>), 3
+          (<code>3</code>) e 2 (<code>2</code>).
+        </p>
+        <p>
+          O objectivo de cada partida é ganhar cartas que valem pontos de forma a atingir mais de 60 pontos. No total,
+          cada baralho tem 120 pontos:
+        </p>
+        <div style="margin-bottom: 15px;">
+          <table class="mdl-data-table" style="margin: 0 auto;">
+            <thead>
+              <tr>
+                <th>Carta</th>
+                <th>Pontos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>A</code></td>
+                <td>11</td>
+              </tr>
+              <tr>
+                <td><code>7</code></td>
+                <td>10</td>
+              </tr>
+              <tr>
+                <td><code>K</code></td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td><code>J</code></td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td><code>Q</code></td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td><code>6</code>, <code>5</code>, <code>4</code>, <code>3</code>, <code>2</code></td>
+                <td>0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          No início de cada partida, as cartas são baralhadas e são distribuídas dez cartas a cada jogador, sendo estas
+          cartas visíveis apenas para o próprio jogador. É escolhido aleatoriamente o jogador que determina o trunfo na
+          primeira partida. O trunfo, para essa partida, é o naipe da primeira carta da mão desse jogador, que fica
+          visível para os restantes jogadores.
+        </p>
+        <p>
+          Em partidas subsequentes, o jogador que decide o trunfo é aquele que se encontra à direita do jogador que
+          decidiu o trunfo na partida anterior. O primeiro jogador a jogar é aquele que se encontra à direita do jogador
+          que decidiu o trunfo e a partida acontece no sentido contrário ao dos ponteiros do relógio.
+        </p>
+        <p>
+          O primeiro jogador de cada jogada pode jogar qualquer carta da sua mão. Os restantes jogadores são obrigados a
+          assistir ao naipe jogado pelo primeiro jogador. Se um jogador não tiver cartas para assistir ao naipe puxado
+          pode jogar uma carta de qualquer outro naipe, incluindo o trunfo.
+        </p>
+        <p>
+          Ganha a jogada o jogador que jogou a carta mais alta do naipe puxado pelo 1º jogador da jogada, ou o jogador
+          que jogou o trunfo mais alto, no caso de haver trunfos na mesa. O jogador que ganhou a jogada inicia a
+          próxima. Os pontos conseguidos nessa jogada (somatório dos pontos das cartas jogadas) contribuem para a
+          pontuação da equipa a que o jogador pertence.
+        </p>
+        <p>
+          A partida termina quando não houver mais cartas disponíveis para jogar.
+        </p>
+        <h5 id="pontos-do-jogo">Pontos do jogo</h5>
+        <p>
+          Um jogo de sueca entre duas equipas é composto por 5 partidas. Ganha a equipa com mais pontos ao final dessas
+          5 partidas. Se as equipas tiverem o mesmo número de pontos no final das 5 partidas, o jogo é considerado
+          empatado.
+        </p>
+        <h5 id="pontos-da-partida">Pontos da partida</h5>
+        <p>
+          Os pontos que cada equipa consegue com as cartas numa partida reflectem os pontos finais que cada equipa
+          recebe com essa partida. No caso de ambas as equipas conseguirem 60 pontos, nenhuma ganha pontos. No caso de
+          uma equipa conseguir mais de 60 pontos, apenas essa equipa ganha pontos. O número de pontos ganho nessa
+          situação depende do número de pontos que essa equipa conseguiu na partida. Se a equipa tiver ganho todas as
+          jogadas da partida, ganha 4 pontos; se conseguir 90 pontos ou mais, ganha 2 pontos; caso contrário ganha 1
+          ponto.
+        </p>
+      </div>
+    </div>
+
+  </section>
+}

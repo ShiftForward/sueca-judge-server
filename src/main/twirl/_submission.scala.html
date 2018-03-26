@@ -1,0 +1,90 @@
+@import eu.shiftforward.suecajudge.storage.Submission
+@import eu.shiftforward.suecajudge.storage.Submission._
+@import eu.shiftforward.suecajudge.safeexec.Runner._
+
+@(submission: Submission)
+
+<ul class="mdl-list" style="margin: 0;">
+  <li class="mdl-list__item mdl-list__item--two-line">
+    <i class="material-icons mdl-list__item-icon">attachment</i>
+    <span class="mdl-list__item-primary-content">
+      <span>Código do bot</span>
+      <span class="mdl-list__item-sub-title">@submission.filename &#8729; <a href="/users/submission" download="@submission.filename">download</a></span>
+    </span>
+  </li>
+  <li class="mdl-list__item mdl-list__item--two-line">
+    <i class="material-icons mdl-list__item-icon">code</i>
+    <span class="mdl-list__item-primary-content">
+      <span>Linguagem</span>
+      <span class="mdl-list__item-sub-title">@submission.language.name</span>
+    </span>
+  </li>
+  <li class="mdl-list__item mdl-list__item--two-line">
+    <i class="material-icons mdl-list__item-icon">access_time</i>
+    <span class="mdl-list__item-primary-content">
+      <span>Submetido</span>
+      <span class="mdl-list__item-sub-title">
+        <span class="momentjs-from-now hidden">@submission.submittedAt</span>
+        <em>(<span class="momentjs-date hidden">@submission.submittedAt</span>)</em>
+      </span>
+    </span>
+  </li>
+  <li class="mdl-list__item mdl-list__item--two-line">
+    @{
+      submission.state match {
+        case Submitted =>
+          <i class="material-icons mdl-list__item-icon state-blue">autorenew</i>
+
+        case PreTested | EvaluatedInTournament =>
+          <i class="material-icons mdl-list__item-icon state-green">check_circle</i>
+
+        case Error(_) =>
+          <i class="material-icons mdl-list__item-icon state-red">error</i>
+      }
+    }
+
+    <span class="mdl-list__item-primary-content">
+      <span>Estado</span>
+      <span class="mdl-list__item-sub-title">
+        @{
+          submission.state match {
+            case Submitted =>
+              "Bot em fila de espera a aguardar compilação e testes unitários base."
+
+            case PreTested =>
+              "O código do bot compilou e passou testes unitários base."
+
+            case EvaluatedInTournament =>
+              "O bot é válido e está ser usado para calcular a tua pontuação."
+
+            case Error(errorCode) =>
+              errorCode match {
+                case MemoryLimitExceeded =>
+                  "O bot excedeu o limites de memória estabelecido."
+
+                case TimeLimitExceeded =>
+                  "O bot excedeu o limite de tempo por jogada estabelecido."
+
+                case RuntimeError =>
+                  "O bot lançou uma exceção durante a execução."
+
+                case CompilationError(stdout, stderr, error) =>
+                  <span style="margin-right: 5px;">A compilação do bot falhou.</span>
+                  <a href="#" id="show-dialog">mais detalhes</a>
+
+                case MalformedOutput(_) =>
+                  "O bot respondeu num formato inválido."
+
+                case WrongOutput =>
+                  "O bot fez uma jogada errada."
+
+                case Unknown | Fatal =>
+                  "Erro desconhecido. Tenta submeter de novo."
+              }
+          }
+        }
+      </span>
+    </span>
+  </li>
+</ul>
+@_momentjs()

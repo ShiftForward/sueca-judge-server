@@ -1,0 +1,8 @@
+# change this in production
+akka.http.session.server-secret = "0123456789012345678901234567890123456789012345678901234567890123"
+
+# change this to a persistent data store in production
+slick {
+  driver = "org.h2.Driver"
+  url = "jdbc:h2:mem:local;DB_CLOSE_DELAY=-1"
+}

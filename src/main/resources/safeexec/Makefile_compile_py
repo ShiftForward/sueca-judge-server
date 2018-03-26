@@ -1,0 +1,3 @@
+run: main.py
+	safeexec --nproc 16 --mem 524288 --cpu 5 --usage cmp-stats --error cmp-stderr --exec /usr/bin/python3 -m compileall main.py > cmp-stdout && \
+	mv __pycache__/main.cpython-36.pyc main.cpython-36.pyc && rm -rf __pycache__

@@ -1,0 +1,2 @@
+run: main.c
+	safeexec --nproc 16 --mem 524288 --cpu 5 --usage cmp-stats --error cmp-stderr --exec /usr/bin/gcc -Wall -O2 -lm main.c > cmp-stdout

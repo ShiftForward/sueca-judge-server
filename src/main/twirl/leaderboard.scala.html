@@ -1,0 +1,139 @@
+@import eu.shiftforward.suecajudge.http.HttpService.Session
+@import eu.shiftforward.suecajudge.storage.{Player, Score}
+@import eu.shiftforward.suecajudge.storage.Submission._
+
+@(participants: Seq[(Player, Score)], lastSubmissionState: Option[SubmissionState], lastComputedAt: Long, finalLeaderboard: Boolean)(implicit session: Session)
+
+@layout("Pontuações") {
+  <section class="section--center leaderboard">
+    <div class="mdl-grid mdl-grid--no-spacing">
+      <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--8-col-phone">
+        <div class="mdl-grid" style="padding: 0;">
+
+          @{
+            if (session.username.isDefined) {
+              val myScore = participants.find(p => p._1.username == session.username.get)
+
+              <div class="mdl-card mdl-cell mdl-cell--6-col mdl-shadow--2dp">
+                <div class="mdl-card__title"><span>Posição atual</span></div>
+                  <div class="mdl-card__supporting-text mdl-card--expand card-big-number">
+                  <span id={ if (myScore.isEmpty) "not-yet-evaluated-1" else ""}>{myScore.map(_._2.rank).getOrElse("-")}<span class="numeral-position">/{participants.size}</span></span></div>
+                  <div class="mdl-card__actions mdl-card--border">
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="#position">
+                    mostrar na tabela
+                    <span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span>
+                  </a>
+                </div>
+              </div>
+
+              <div class="mdl-card mdl-cell mdl-cell--6-col mdl-shadow--2dp">
+                <div class="mdl-card__title"><span>Pontuação atual</span></div>
+                <div class="mdl-card__supporting-text mdl-card--expand card-big-number">
+                {
+                  myScore.map { s =>
+                    <div class="scores-top">{s._2.score}</div>
+                    <div class="scores-bottom">
+                      <span title="Vitórias" class="ball win">{s._2.wins}</span> &#8729; <span title="Empates" class="ball draw">{s._2.draws}</span> &#8729; <span title="Derrotas" class="ball lose">{s._2.losses}</span>
+                    </div>
+                  }.getOrElse(<span id={ if (myScore.isEmpty) "not-yet-evaluated-2" else ""}>-</span>)
+                }
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="#position">
+                    mostrar na tabela
+                    <span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span>
+                  </a>
+                </div>
+              </div>
+
+              <div class="mdl-card mdl-cell mdl-cell--6-col mdl-shadow--2dp">
+                <div class="mdl-card__title"><span>Submissão mais recente</span></div>
+                <div class="mdl-card__supporting-text mdl-card--expand">
+                  {lastSubmissionState match {
+                    case Some(Submitted | PreTested) =>
+                      <div class="submit-state"><i class="material-icons state-blue">autorenew</i>em espera</div>
+                      <span>Ainda não foi usada para calcular a pontuação atual.</span>
+                    case Some(EvaluatedInTournament) =>
+                      <div class="submit-state"><i class="material-icons state-green">check_circle</i>válida</div>
+                      <span>A ser usada para calcular a pontuação atual.</span>
+                    case Some(Error(_)) =>
+                      <div class="submit-state"><i class="material-icons state-red">error</i>inválida</div>
+                      <span>Com erros, por isso a tua submissão não será considerada nos próximos torneios até corrigires o teu bot.</span>
+                    case None =>
+                      <span>Ainda não submeteste nenhum bot.</span>
+                }}
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/submit">
+                  ver mais detalhes
+                  <span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span>
+                  </a>
+                </div>
+              </div>
+            } else {
+              <div class="mdl-card mdl-cell mdl-cell--6-col mdl-shadow--2dp">
+                <div class="mdl-card__title"><span>Queres participar?</span></div>
+                <div class="mdl-card__supporting-text mdl-card--expand">
+                  Regista-te ou autentica-te para conseguires chegar ao topo!
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/login">
+                    Iniciar sessão
+                    <span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span>
+                  </a>
+                </div>
+              </div>
+            }
+          }
+          <div class="mdl-card mdl-cell mdl-cell--6-col mdl-shadow--2dp">
+            <div class="mdl-card__title">Pontuações</div>
+            <div class="mdl-card__supporting-text" style="margin-top: -15px;">
+              @if(lastComputedAt == 0l) {
+                <div>Ainda não ocorreu nenhum torneio.</div>
+              } else {
+                <div>Atualizado pela última vez <span class="momentjs-from-now hidden">@lastComputedAt</span>. <em>(<span class="momentjs-date hidden">@lastComputedAt</span>)</em></div>
+              }
+              @if(!finalLeaderboard) {
+                <div style="margin-top: 10px; color: rgba(0, 0, 0, 0.34);">Esta pontuação é preliminar. A pontuação final será calculada depois do desafio terminar.</div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--8-col-phone ">
+        <div class="mdl-grid" style="justify-content: center;">
+          <table class="mdl-data-table mdl-cell--12-col mdl-cell--6-col-tablet mdl-js-data-table mdl-shadow--2dp">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Utilizador</th>
+                <th>Instituição</th>
+                <th>Pontuação</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for(((p, score)) <- participants) {
+                <tr @{ if (session.username.getOrElse("") == p.username) "id=position class=is-selected" else ""}>
+                  <td>@{score.rank}</td>
+                  <td class="names" title="@p.username">@p.username</td>
+                  <td>@p.institution</td>
+                  <td title="V: @score.wins &#8729; E: @score.draws &#8729; D: @score.losses">@score.score</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="mdl-tooltip" data-mdl-for="not-yet-evaluated-1">
+      Submissão com erro ou inexistente
+    </div>
+    <div class="mdl-tooltip" data-mdl-for="not-yet-evaluated-2">
+      Submissão com erro ou inexistente
+    </div>
+    <div class="mdl-tooltip" data-mdl-for="not-yet-evaluated-3">
+      Submissão com erro ou inexistente
+    </div>
+  </section>
+  @_momentjs()
+}

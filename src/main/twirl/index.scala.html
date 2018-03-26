@@ -1,0 +1,58 @@
+@import eu.shiftforward.suecajudge.http.HttpService.Session
+
+@()(implicit session: Session)
+
+@layout("Início") {
+  <div class="android-be-together-section mdl-typography--text-center">
+    <div class="logo-font android-slogan">CAMPEONATO DE SUECA</div>
+    <div class="logo-font android-sub-slogan">(SÓ QUE COM BOTS)</div>
+
+    <div class="logo-font android-create-character">
+
+      <a href="/register">
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">
+        Cria o teu bot e compete
+      </button>
+      </a>
+    </div>
+  </div>
+
+  <div class="mdl-grid section--center index-intro">
+    <div class="mdl-cell mdl-cell--12-col mdl-typography--display-1 mdl-typography--display-1-color-contrast mdl-typography--text-center">
+      <h3>Encontraste o <span style="white-space: nowrap;">ShiftForward Challenge Card</span>. E agora?</h3>
+    </div>
+    <div class="mdl-cell mdl-cell--12-col">
+      <p class="mdl-typography--body-1-force-preferred-font-color-contrast">
+        O ShiftForward Challenge vai desafiar as tuas habilidades de Sueca num outro nível.
+        Alia o estudante de engenharia informática ao velhote do jardim público que há em ti e cria um bot para competir num campeonato de Sueca contra outros jogadores presentes no ENEI 2018.
+      </p>
+      <p>
+        Tens até às 23:59 de domingo (dia 25 de março) para criares e melhorares o teu bot. Antes de começares não te esqueças de ler as <a href="/rules">regras</a> do desafio.
+        Dá o teu melhor pois no final iremos oferecer prémios para os três melhores bots.
+      </p>
+      <p>Para mais informações e ajuda, junta-te ao nosso canal no slack do ENEI: <a href="https://eneipt.slack.com/messages/suecacombots" target="_blank">#suecacombots</a> &#8729; <a href="slack://channel?team=T9P9VTUFP&id=C9SS519GQ">(abrir na aplicação)</a></p>
+    </div>
+  </div>
+
+  <div class="mdl-grid prizes-container section--center">
+    <div class="mdl-cell mdl-cell--12-col mdl-typography--display-3 mdl-typography--display-3-color-contrast">
+      <h2 id="premios">Prémios</h2>
+    </div>
+
+    <div class="prize mdl-cell mdl-cell--4-col-desktop mdl-cell--6-col-tablet mdl-cell--6-col-phone">
+      <img src="/img/prizes/1st.png" />
+      <h3 class="prize-rank mdl-typography--display-1 mdl-typography--font-bold">1.º Prémio</h3>
+      <div class="mdl-typography--body-1-color-contrast">PlayStation 4 + GTA V</div>
+    </div>
+    <div class="prize mdl-cell mdl-cell--4-col-desktop mdl-cell--6-col-tablet mdl-cell--6-col-phone">
+      <img src="/img/prizes/2nd.png" />
+      <h3 class="prize-rank  mdl-typography--display-1 mdl-typography--font-bold">2.º Prémio</h3>
+      <div class="mdl-typography--body-1-color-contrast">Headphones Sennheiser HD 4.50 BTNC</div>
+    </div>
+    <div class="prize mdl-cell mdl-cell--4-col-desktop mdl-cell--6-col-tablet mdl-cell--6-col-phone">
+      <img src="/img/prizes/3rd.png" />
+      <h3 class="prize-rank mdl-typography--display-1 mdl-typography--font-bold">3.º Prémio</h3>
+      <div class="mdl-typography--body-1-color-contrast">ShiftForward Craft Beer + Kit IoT</div>
+    </div>
+  </div>
+}

@@ -1,0 +1,2 @@
+run: main.js
+	safeexec --clock 5 --cpu 5 --nproc 16 --mem 600000 --usage exe-stats --error exe-stderr --exec /usr/bin/node --max_old_space_size=524288 main.js < exe-stdin > exe-stdout

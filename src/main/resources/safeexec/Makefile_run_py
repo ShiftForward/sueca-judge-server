@@ -1,0 +1,2 @@
+run: main.cpython-36.pyc
+	safeexec --clock 5 --cpu 5 --nproc 16 --mem 524288 --usage exe-stats --error exe-stderr --exec /usr/bin/python3 main.cpython-36.pyc < exe-stdin > exe-stdout
