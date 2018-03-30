@@ -1,0 +1,14 @@
+language: scala
+scala:
+  - 2.12.4
+services:
+  - docker
+
+script:
+  - docker pull shiftforward/safeexec:0.3
+  - sbt ++$TRAVIS_SCALA_VERSION test
+
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt/boot
