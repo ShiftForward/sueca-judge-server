@@ -114,15 +114,29 @@ trait HttpService extends SubmissionsDirectives with Logging {
           }
         }
       } ~
-      path("users" / "submission") {
-        (get & requireSession) { username =>
-          onSuccess(DB.players.latestSubmission(username)) {
-            case Some(s) =>
-              Try(new String(s.payload)).toOption match {
-                case Some(textFile) => complete(textFile)
-                case None => complete(s.payload)
-              }
-            case None => complete(NoContent)
+      pathPrefix("users" / "submission") {
+        pathEndOrSingleSlash {
+          (get & requireSession) { username =>
+            onSuccess(DB.players.latestSubmission(username)) {
+              case Some(s) =>
+                Try(new String(s.payload)).toOption match {
+                  case Some(textFile) => complete(textFile)
+                  case None => complete(s.payload)
+                }
+              case None => complete(NoContent)
+            }
+          }
+        } ~
+        path(Segment) { username =>
+          (get & validate(finalLeaderboard, "Disponível apenas após o concurso terminar")) {
+            onSuccess(DB.players.latestSubmission(username)) {
+              case Some(s) =>
+                Try(new String(s.payload)).toOption match {
+                  case Some(textFile) => complete(textFile)
+                  case None => complete(s.payload)
+                }
+              case None => complete(NoContent)
+            }
           }
         }
       } ~
