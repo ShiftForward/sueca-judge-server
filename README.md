@@ -1,4 +1,4 @@
-# Sueca Judge Server
+# Sueca Judge Server [![Build Status](https://travis-ci.org/ShiftForward/sueca-judge-server.svg?branch=master)](https://travis-ci.org/ShiftForward/sueca-judge-server)
 
 The judge system used by [ShiftForward](https://www.shiftforward.eu) to run the
 [ShiftForward Challenge](https://enei2018.shiftforward.eu) at [ENEI](https://enei.pt) 2018.

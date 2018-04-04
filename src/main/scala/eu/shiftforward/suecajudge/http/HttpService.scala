@@ -5,6 +5,8 @@ import scala.concurrent.duration._
 import scala.util.{ Success, Try }
 
 import akka.http.scaladsl.model.StatusCodes._
+import akka.http.scaladsl.model.headers.ContentDispositionTypes.attachment
+import akka.http.scaladsl.model.headers.`Content-Disposition`
 import akka.http.scaladsl.model.{ EntityStreamSizeException, Uri }
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
@@ -15,10 +17,10 @@ import com.typesafe.config.ConfigFactory
 import org.apache.logging.log4j.scala.Logging
 import org.joda.time.DateTime
 
+import eu.shiftforward.suecajudge.http.CustomDirectives._
 import eu.shiftforward.suecajudge.http.HttpService.Session
 import eu.shiftforward.suecajudge.http.Validation.MaxPayloadSize
 import eu.shiftforward.suecajudge.storage.{ DB, Player }
-import eu.shiftforward.suecajudge.http.CustomDirectives._
 
 trait HttpService extends SubmissionsDirectives with Logging {
 
@@ -114,15 +116,33 @@ trait HttpService extends SubmissionsDirectives with Logging {
           }
         }
       } ~
-      path("users" / "submission") {
-        (get & requireSession) { username =>
-          onSuccess(DB.players.latestSubmission(username)) {
-            case Some(s) =>
-              Try(new String(s.payload)).toOption match {
-                case Some(textFile) => complete(textFile)
-                case None => complete(s.payload)
-              }
-            case None => complete(NoContent)
+      pathPrefix("users" / "submission") {
+        pathEndOrSingleSlash {
+          (get & requireSession) { username =>
+            onSuccess(DB.players.latestSubmission(username)) {
+              case Some(s) =>
+                respondWithHeader(`Content-Disposition`(attachment, Map("attachment" -> "", "filename" -> s.filename))) {
+                  Try(new String(s.payload)).toOption match {
+                    case Some(textFile) => complete(textFile)
+                    case None => complete(s.payload)
+                  }
+                }
+              case None => complete(NoContent)
+            }
+          }
+        } ~
+        path(Segment) { username =>
+          (get & validate(finalLeaderboard, "Disponível apenas após o concurso terminar")) {
+            onSuccess(DB.players.latestSubmission(username)) {
+              case Some(s) =>
+                respondWithHeader(`Content-Disposition`(attachment, Map("attachment" -> "", "filename" -> s.filename))) {
+                  Try(new String(s.payload)).toOption match {
+                    case Some(textFile) => complete(textFile)
+                    case None => complete(s.payload)
+                  }
+                }
+              case None => complete(NoContent)
+            }
           }
         }
       } ~

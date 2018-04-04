@@ -115,7 +115,13 @@
               @for(((p, score)) <- participants) {
                 <tr @{ if (session.username.getOrElse("") == p.username) "id=position class=is-selected" else ""}>
                   <td>@{score.rank}</td>
-                  <td class="names" title="@p.username">@p.username</td>
+                  <td class="names" title="@p.username">
+                    @if(finalLeaderboard) {
+                      <a download href="/users/submission/@p.username">@p.username</a>
+                    } else {
+                      @p.username
+                    }
+                  </td>
                   <td>@p.institution</td>
                   <td title="V: @score.wins &#8729; E: @score.draws &#8729; D: @score.losses">@score.score</td>
                 </tr>

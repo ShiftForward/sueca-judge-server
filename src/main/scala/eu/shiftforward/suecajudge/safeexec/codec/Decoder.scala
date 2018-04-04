@@ -44,6 +44,7 @@ object Decoder {
       def decodePreviousTricks(s: String): List[(Int, Vector[Card])] =
         s.split(" ").toList.drop(1).grouped(5).map {
           case (a :: rest) => (a.toInt, rest.map(_.decode[Card].get).toVector)
+          case _ => throw new IllegalArgumentException("Illegal PartialGame")
         }.toList
 
       val lines = string.lines
